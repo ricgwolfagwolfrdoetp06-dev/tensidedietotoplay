@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dado de 10 caras</title>
+<style>
+:root{--bg:#f4f1ff;--fg:#2a2150;--face:#7c5cff;--face2:#5a3fd6;--line:#ffffff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17132b;--fg:#ece8ff;--face:#8f74ff;--face2:#6246e0;--line:#17132b}}
+:root[data-theme="dark"]{--bg:#17132b;--fg:#ece8ff;--face:#8f74ff;--face2:#6246e0;--line:#17132b}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+svg{width:min(70vw,260px);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.shake{animation:sh .18s infinite}
+@keyframes sh{0%{transform:rotate(-12deg) scale(1.03)}50%{transform:rotate(12deg) scale(.97)}100%{transform:rotate(-12deg) scale(1.03)}}
+text{font-weight:800;font-size:56px;fill:#fff;text-anchor:middle}
+button{font:inherit;font-weight:700;padding:12px 28px;border:0;border-radius:999px;background:var(--face2);color:#fff;cursor:pointer}
+button:disabled{opacity:.6}
+</style>
+</head>
+<body>
+<svg id="d" viewBox="0 0 200 200" role="img" aria-label="Dado de 10 caras">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--face)"/><stop offset="1" stop-color="var(--face2)"/></linearGradient></defs>
+  <path d="M100 8 L184 78 L100 194 L16 78 Z" fill="url(#g)" stroke="var(--line)" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M16 78 L100 112 L184 78 M100 8 L100 112 L100 194" fill="none" stroke="var(--line)" stroke-width="2.5" stroke-opacity=".7"/>
+  <text id="n" x="100" y="96">10</text>
+</svg>
+<button id="b">Tirar dado</button>
+<script>
+const n=document.getElementById('n'),d=document.getElementById('d'),b=document.getElementById('b');
+function rnd(){const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%10+1}
+function roll(){
+  if(b.disabled)return;
+  b.disabled=true;d.classList.add('shake');
+  const t=setInterval(()=>{n.textContent=rnd()},70);
+  setTimeout(()=>{clearInterval(t);d.classList.remove('shake');n.textContent=rnd();b.disabled=false},1200);
+}
+b.onclick=roll;d.onclick=roll;
+</script>
+</body>
+</html>
